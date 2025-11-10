@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using Persistence.Data;
+using Persistence.Repos;
 using Service;
 using Service.MappingProfiles;
 using ServiceAbstraction;
@@ -28,9 +29,9 @@ namespace ECommerce.Web
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
             });
             builder.Services.AddScoped<IDataSeeding, DataSeeding>();
-            builder.Services.AddScoped<IUnitOfWork, IUnitOfWork>();
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             //builder.Services.AddAutoMapper(X => X.AddProfile(new ProductProfile()));
-            builder.Services.AddAutoMapper(typeof(Service.AssemblyReference).Assembly);
+            builder.Services.AddAutoMapper(cfg => { }, typeof(Service.AssemblyReference).Assembly);
             builder.Services.AddScoped<IServiceManager, ServiceManager>();
             var app = builder.Build();
 
