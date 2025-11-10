@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using Persistence.Data;
+using Service;
 using Service.MappingProfiles;
+using ServiceAbstraction;
 
 namespace ECommerce.Web
 {
@@ -29,6 +31,7 @@ namespace ECommerce.Web
             builder.Services.AddScoped<IUnitOfWork, IUnitOfWork>();
             //builder.Services.AddAutoMapper(X => X.AddProfile(new ProductProfile()));
             builder.Services.AddAutoMapper(typeof(Service.AssemblyReference).Assembly);
+            builder.Services.AddScoped<IServiceManager, ServiceManager>();
             var app = builder.Build();
 
             using var scope = app.Services.CreateScope();
