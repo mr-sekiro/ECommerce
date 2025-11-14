@@ -19,6 +19,14 @@ namespace Persistence.Repos
 
         public async Task<TEntity?> GetByIdAsync(TKey id) => await dbContext.FindAsync<TEntity>(id);
 
+        //////////////////
+        public async Task<IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity, TKey> spec)
+                => await SpecificationEvaluator<TEntity, TKey>.GetQuery(dbContext.Set<TEntity>(), spec).ToListAsync();
+
+        public async Task<TEntity?> GetByIdAsync(ISpecification<TEntity, TKey> spec)
+                => await SpecificationEvaluator<TEntity, TKey>.GetQuery(dbContext.Set<TEntity>(), spec).FirstOrDefaultAsync();
+        /////////////////////
+
         public void Remove(TEntity entity) => dbContext.Set<TEntity>().Remove(entity);
 
         public void Update(TEntity entity) => dbContext?.Set<TEntity>().Update(entity);
