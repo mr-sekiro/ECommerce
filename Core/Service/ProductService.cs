@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DomainLayer.Contracts;
 using DomainLayer.Models;
+using Service.Specifications;
 using ServiceAbstraction;
 using Shared.Dtos;
 using System;
@@ -23,10 +24,19 @@ namespace Service
         }
 
         //Get All Products
+        //public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
+        //{
+        //    var repo = _unitOfWork.GetRepo<Product, int>(new Product());
+        //    var products = await repo.GetAllAsync();
+        //    return _mapper.Map<IEnumerable<ProductDto>>(products);
+        //}
+
         public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
         {
+            var spec = new ProductsWithFiltersSpec();
             var repo = _unitOfWork.GetRepo<Product, int>(new Product());
-            var products = await repo.GetAllAsync();
+            var products = await repo.GetAllAsync(spec);
+
             return _mapper.Map<IEnumerable<ProductDto>>(products);
         }
 
@@ -47,10 +57,20 @@ namespace Service
         }
 
         //Get Product by ID
+        //public async Task<ProductDetailsDto?> GetByIdAsync(int id)
+        //{
+        //    var repo = _unitOfWork.GetRepo<Product, int>(new Product());
+        //    var product = await repo.GetByIdAsync(id);
+        //    return product is null ? null : _mapper.Map<ProductDetailsDto>(product);
+        //}
+
         public async Task<ProductDetailsDto?> GetByIdAsync(int id)
         {
+            var spec = new ProductByIdSpec(id);
             var repo = _unitOfWork.GetRepo<Product, int>(new Product());
-            var product = await repo.GetByIdAsync(id);
+
+            var product = await repo.GetByIdAsync(spec);
+
             return product is null ? null : _mapper.Map<ProductDetailsDto>(product);
         }
 

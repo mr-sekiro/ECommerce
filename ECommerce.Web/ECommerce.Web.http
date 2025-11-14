@@ -1,5 +1,20 @@
 @ECommerce.Web_HostAddress = http://localhost:5194
 
 
+###
+GET {{ECommerce.Web_HostAddress}}/api/Products
+
+###
+
+@id=0
+GET {{ECommerce.Web_HostAddress}}/api/Products/{{id}}
+
+###
+
+GET {{ECommerce.Web_HostAddress}}/api/Products/types
+
+###
+
+GET {{ECommerce.Web_HostAddress}}/api/Products/brands
 
 ###
