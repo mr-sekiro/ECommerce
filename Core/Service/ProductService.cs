@@ -65,6 +65,14 @@ namespace Service
             );
         }
 
+        public async Task<int> GetProductsCountAsync(ProductQueryParams Params)
+        {
+            var spec = new ProductsWithFiltersForCountSpec(Params);
+            var repo = _unitOfWork.GetRepo<Product, int>(new Product());
+            var totalCount = await repo.CountAsync(spec);
+            return totalCount;
+        }
+
         //Get All Brands
         public async Task<IEnumerable<BrandDto>> GetAllBrandsAsync()
         {
