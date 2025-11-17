@@ -13,7 +13,10 @@ namespace Service.Specifications
         public ProductsWithFiltersSpec(ProductQueryParams Params)
             : base(p =>
                 (!Params.BrandId.HasValue || p.BrandId == Params.BrandId) &&
-                (!Params.TypeId.HasValue || p.TypeId == Params.TypeId)
+                (!Params.TypeId.HasValue || p.TypeId == Params.TypeId) &&
+                (string.IsNullOrEmpty(Params.Search) ||
+                 p.Name.Contains(Params.Search) ||
+                 p.Description.Contains(Params.Search))
             )
         {
             AddInclude(p => p.ProductBrand);
