@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ServiceAbstraction;
+using Shared;
 using Shared.Dtos;
 using System;
 using System.Collections.Generic;
@@ -22,9 +23,9 @@ namespace PresentationLayer.Controllers
 
         //GET: api/products
         [HttpGet]
-        public async Task<IActionResult> GetProducts(int? brandId, int? typeId)
+        public async Task<IActionResult> GetProducts(int? brandId, int? typeId, ProductSortingOptions sortingOption)
         {
-            var result = await _service.ProductService.GetAllProductsAsync(brandId, typeId);
+            var result = await _service.ProductService.GetAllProductsAsync(brandId, typeId, sortingOption);
             return Ok(result);
         }
 
@@ -48,7 +49,7 @@ namespace PresentationLayer.Controllers
             await _service.ProductService.AddAsync(productDto);
 
             //After saving, fetch the new product (if you want to return the created resource)
-            var allProducts = await _service.ProductService.GetAllProductsAsync(null, null);
+            var allProducts = await _service.ProductService.GetAllProductsAsync(null, null, 0);
             var createdProduct = allProducts.LastOrDefault(); // or use a return value from service
 
             return CreatedAtAction(nameof(GetProductById), new { id = createdProduct?.Id }, createdProduct);
