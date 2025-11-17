@@ -22,10 +22,10 @@ namespace PresentationLayer.Controllers
 
         //GET: api/products
         [HttpGet]
-        public async Task<IActionResult> GetAllProducts()
+        public async Task<IActionResult> GetProducts(int? brandId, int? typeId)
         {
-            var products = await _service.ProductService.GetAllProductsAsync();
-            return Ok(products);
+            var result = await _service.ProductService.GetAllProductsAsync(brandId, typeId);
+            return Ok(result);
         }
 
         //GET: api/products/{id}
@@ -48,7 +48,7 @@ namespace PresentationLayer.Controllers
             await _service.ProductService.AddAsync(productDto);
 
             //After saving, fetch the new product (if you want to return the created resource)
-            var allProducts = await _service.ProductService.GetAllProductsAsync();
+            var allProducts = await _service.ProductService.GetAllProductsAsync(null, null);
             var createdProduct = allProducts.LastOrDefault(); // or use a return value from service
 
             return CreatedAtAction(nameof(GetProductById), new { id = createdProduct?.Id }, createdProduct);
@@ -98,4 +98,3 @@ namespace PresentationLayer.Controllers
         }
     }
 }
- 

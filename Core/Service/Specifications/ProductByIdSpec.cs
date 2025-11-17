@@ -12,8 +12,8 @@ namespace Service.Specifications
         public ProductByIdSpec(int id)
             : base(p => p.Id == id)
         {
-            AddInclude(p => p.BrandId);
-            AddInclude(p => p.TypeId);
+            AddInclude(p => p.ProductBrand);
+            AddInclude(p => p.ProductType);
         }
     }
 }

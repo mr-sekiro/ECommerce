@@ -9,12 +9,14 @@ namespace Service.Specifications
 {
     public class ProductsWithFiltersSpec : BaseSpecification<Product, int>
     {
-        public ProductsWithFiltersSpec()
+        public ProductsWithFiltersSpec(int? brandId, int? typeId)
+            : base(p =>
+                (!brandId.HasValue || p.BrandId == brandId) &&
+                (!typeId.HasValue || p.TypeId == typeId)
+            )
         {
-            AddInclude(p => p.ProductBrand);   
-            AddInclude(p => p.ProductType);    
-
-            AddOrderBy(p => p.Name);
+            AddInclude(p => p.ProductBrand);
+            AddInclude(p => p.ProductType);
         }
     }
 }
