@@ -41,6 +41,7 @@ namespace Service.Specifications
                     break;
             }
 
+            ApplyPaging((Params.PageNumber - 1) * Params.PageSize, Params.PageSize);
         }
     }
 }
