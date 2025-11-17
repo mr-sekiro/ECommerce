@@ -10,16 +10,16 @@ namespace Service.Specifications
 {
     public class ProductsWithFiltersSpec : BaseSpecification<Product, int>
     {
-        public ProductsWithFiltersSpec(int? brandId, int? typeId, ProductSortingOptions SortingOoption)
+        public ProductsWithFiltersSpec(ProductQueryParams Params)
             : base(p =>
-                (!brandId.HasValue || p.BrandId == brandId) &&
-                (!typeId.HasValue || p.TypeId == typeId)
+                (!Params.BrandId.HasValue || p.BrandId == Params.BrandId) &&
+                (!Params.TypeId.HasValue || p.TypeId == Params.TypeId)
             )
         {
             AddInclude(p => p.ProductBrand);
             AddInclude(p => p.ProductType);
 
-            switch (SortingOoption)
+            switch (Params.SortingOption)
             {
                 case ProductSortingOptions.PriceAsc:
                     AddOrderBy(p => p.Price);
