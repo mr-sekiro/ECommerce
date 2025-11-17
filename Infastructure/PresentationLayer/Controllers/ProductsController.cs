@@ -23,11 +23,19 @@ namespace PresentationLayer.Controllers
 
         //GET: api/products
         [HttpGet]
-        public async Task<IActionResult> GetProducts(int? brandId, int? typeId, ProductSortingOptions sortingOption)
+        public async Task<IActionResult> GetProducts([FromQuery] ProductQueryParams Params)
         {
-            var result = await _service.ProductService.GetAllProductsAsync(brandId, typeId, sortingOption);
+            var result = await _service.ProductService.GetAllProductsAsync(Params);
             return Ok(result);
         }
+
+        [HttpGet("paginated")]
+        public async Task<IActionResult> GetPaginatedProducts([FromQuery] ProductQueryParams Params)
+        {
+            var result = await _service.ProductService.GetProductsWithPaginationAsync(Params);
+            return Ok(result);
+        }
+
 
         //GET: api/products/{id}
         [HttpGet("{id:int}")]
@@ -49,7 +57,7 @@ namespace PresentationLayer.Controllers
             await _service.ProductService.AddAsync(productDto);
 
             //After saving, fetch the new product (if you want to return the created resource)
-            var allProducts = await _service.ProductService.GetAllProductsAsync(null, null, 0);
+            var allProducts = await _service.ProductService.GetAllProductsAsync(new ProductQueryParams());
             var createdProduct = allProducts.LastOrDefault(); // or use a return value from service
 
             return CreatedAtAction(nameof(GetProductById), new { id = createdProduct?.Id }, createdProduct);

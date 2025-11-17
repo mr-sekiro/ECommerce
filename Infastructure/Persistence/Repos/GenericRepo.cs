@@ -30,5 +30,14 @@ namespace Persistence.Repos
         public void Remove(TEntity entity) => dbContext.Set<TEntity>().Remove(entity);
 
         public void Update(TEntity entity) => dbContext?.Set<TEntity>().Update(entity);
+
+        /////////////////////
+        public async Task<int> CountAsync() => await dbContext.Set<TEntity>().CountAsync();
+
+        public async Task<int> CountAsync(ISpecification<TEntity, TKey> spec)
+            => await SpecificationEvaluator<TEntity, TKey>
+                        .GetQuery(dbContext.Set<TEntity>(), spec)
+                        .CountAsync();
+        /////////////////////
     }
 }

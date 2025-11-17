@@ -32,13 +32,37 @@ namespace Service
         //    return _mapper.Map<IEnumerable<ProductDto>>(products);
         //}
 
-        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync(int? brandId, int? typeId, ProductSortingOptions sortingOption)
+        public async Task<IEnumerable<ProductDto>> GetAllProductsAsync(ProductQueryParams Params)
         {
-            var spec = new ProductsWithFiltersSpec(brandId, typeId,sortingOption);
+            var spec = new ProductsWithFiltersSpec(Params);
             var repo = _unitOfWork.GetRepo<Product, int>(new Product());
             var products = await repo.GetAllAsync(spec);
 
             return _mapper.Map<IEnumerable<ProductDto>>(products);
+        }
+
+        public async Task<PaginatedResult<ProductDto>> GetProductsWithPaginationAsync(ProductQueryParams Params)
+        {
+            var repo = _unitOfWork.GetRepo<Product, int>(new Product());
+
+            //Get paginated products
+            var spec = new ProductsWithFiltersSpec(Params);
+            var products = await repo.GetAllAsync(spec);
+
+            //Count total items
+            var countSpec = new ProductsWithFiltersForCountSpec(Params);
+            var totalCount = await repo.CountAsync(countSpec);
+
+            //Map to DTO
+            var mappedProducts = _mapper.Map<IEnumerable<ProductDto>>(products);
+
+            //Return paginated result
+            return new PaginatedResult<ProductDto>(
+                mappedProducts,
+                totalCount,
+                Params.PageNumber,
+                Params.PageSize
+            );
         }
 
         //Get All Brands
