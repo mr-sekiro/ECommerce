@@ -12,6 +12,7 @@ namespace ServiceAbstraction
     {
         //get all Products
         Task<IEnumerable<ProductDto>> GetAllProductsAsync(ProductQueryParams Params);
+        Task<PaginatedResult<ProductDto>> GetProductsWithPaginationAsync(ProductQueryParams Params);
         //get all Brands
         Task<IEnumerable<BrandDto>> GetAllBrandsAsync();
         //get all Types

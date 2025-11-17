@@ -29,6 +29,14 @@ namespace PresentationLayer.Controllers
             return Ok(result);
         }
 
+        [HttpGet("paginated")]
+        public async Task<IActionResult> GetPaginatedProducts([FromQuery] ProductQueryParams Params)
+        {
+            var result = await _service.ProductService.GetProductsWithPaginationAsync(Params);
+            return Ok(result);
+        }
+
+
         //GET: api/products/{id}
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetProductById(int id)
