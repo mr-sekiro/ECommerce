@@ -1,8 +1,12 @@
 
 using DomainLayer.Contracts;
 using ECommerce.Web.CustomMiddlewares;
+using ECommerce.Web.Factories;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens.Experimental;
+using Microsoft.OpenApi.Validations;
 using Persistence;
 using Persistence.Data;
 using Persistence.Repos;
@@ -10,6 +14,7 @@ using PresentationLayer.CustomMiddlewares;
 using Service;
 using Service.MappingProfiles;
 using ServiceAbstraction;
+using Shared.ErrorModels;
 
 namespace ECommerce.Web
 {
@@ -35,6 +40,13 @@ namespace ECommerce.Web
             //builder.Services.AddAutoMapper(X => X.AddProfile(new ProductProfile()));
             builder.Services.AddAutoMapper(cfg => { }, typeof(Service.AssemblyReference).Assembly);
             builder.Services.AddScoped<IServiceManager, ServiceManager>();
+
+            builder.Services.AddControllers()
+            .ConfigureApiBehaviorOptions(options =>
+            {
+                options.InvalidModelStateResponseFactory = ApiResponseFactory.GenerateApiValidationError;
+            });
+
             var app = builder.Build();
 
             using var scope = app.Services.CreateScope();
