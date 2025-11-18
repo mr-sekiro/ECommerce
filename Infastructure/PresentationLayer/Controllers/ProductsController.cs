@@ -28,14 +28,20 @@ namespace PresentationLayer.Controllers
             var result = await _service.ProductService.GetAllProductsAsync(Params);
             return Ok(result);
         }
-
+        //GET: api/products/paginated
         [HttpGet("paginated")]
         public async Task<IActionResult> GetPaginatedProducts([FromQuery] ProductQueryParams Params)
         {
             var result = await _service.ProductService.GetProductsWithPaginationAsync(Params);
             return Ok(result);
         }
-
+        //GET: api/products/count
+        [HttpGet("count")]
+        public async Task<IActionResult> GetProductsCount([FromQuery] ProductQueryParams Params)
+        {
+            var count = await _service.ProductService.GetProductsCountAsync(Params);
+            return Ok(new { TotalCount = count });
+        }
 
         //GET: api/products/{id}
         [HttpGet("{id:int}")]

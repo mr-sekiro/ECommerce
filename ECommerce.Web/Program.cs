@@ -1,10 +1,12 @@
 
 using DomainLayer.Contracts;
+using ECommerce.Web.CustomMiddlewares;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using Persistence.Data;
 using Persistence.Repos;
+using PresentationLayer.CustomMiddlewares;
 using Service;
 using Service.MappingProfiles;
 using ServiceAbstraction;
@@ -38,6 +40,9 @@ namespace ECommerce.Web
             using var scope = app.Services.CreateScope();
             var objectDataSeeding = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
             await objectDataSeeding.DataSeedAsync();
+
+            app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<NotFoundEndpointMiddleware>();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using DomainLayer.Contracts;
+using DomainLayer.Exceptions;
 using DomainLayer.Models;
 using Service.Specifications;
 using ServiceAbstraction;
@@ -65,6 +66,14 @@ namespace Service
             );
         }
 
+        public async Task<int> GetProductsCountAsync(ProductQueryParams Params)
+        {
+            var spec = new ProductsWithFiltersForCountSpec(Params);
+            var repo = _unitOfWork.GetRepo<Product, int>(new Product());
+            var totalCount = await repo.CountAsync(spec);
+            return totalCount;
+        }
+
         //Get All Brands
         public async Task<IEnumerable<BrandDto>> GetAllBrandsAsync()
         {
@@ -95,7 +104,7 @@ namespace Service
             var repo = _unitOfWork.GetRepo<Product, int>(new Product());
 
             var product = await repo.GetByIdAsync(spec);
-
+            if (product == null) throw new ProductNotFoundException(id);
             return product is null ? null : _mapper.Map<ProductDetailsDto>(product);
         }
 
