@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Persistence;
 using Persistence.Data;
 using Persistence.Repos;
+using PresentationLayer.CustomMiddlewares;
 using Service;
 using Service.MappingProfiles;
 using ServiceAbstraction;
@@ -41,6 +42,8 @@ namespace ECommerce.Web
             await objectDataSeeding.DataSeedAsync();
 
             app.UseMiddleware<ExceptionMiddleware>();
+            app.UseMiddleware<NotFoundEndpointMiddleware>();
+
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
