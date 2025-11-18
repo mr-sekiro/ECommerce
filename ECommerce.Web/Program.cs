@@ -1,5 +1,6 @@
 
 using DomainLayer.Contracts;
+using ECommerce.Web.CustomMiddlewares;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Persistence;
@@ -39,6 +40,7 @@ namespace ECommerce.Web
             var objectDataSeeding = scope.ServiceProvider.GetRequiredService<IDataSeeding>();
             await objectDataSeeding.DataSeedAsync();
 
+            app.UseMiddleware<ExceptionMiddleware>();
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
