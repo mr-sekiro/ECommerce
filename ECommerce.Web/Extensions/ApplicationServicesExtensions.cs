@@ -1,10 +1,13 @@
 ﻿using DomainLayer.Contracts;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using Persistence;
 using Persistence.Data;
 using Persistence.Repos;
 using Service;
 using ServiceAbstraction;
+using StackExchange.Redis;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace ECommerce.Web.Extensions
 {
@@ -19,9 +22,20 @@ namespace ECommerce.Web.Extensions
                 options.UseSqlServer(config.GetConnectionString("DefaultConnection"));
             });
 
+            services.AddSingleton<IConnectionMultiplexer>(sp =>
+            {
+                var redisConnection = config.GetConnectionString("Redis")
+                                      ?? "localhost:6379";
+
+                return ConnectionMultiplexer.Connect(redisConnection);
+            });
+
             services.AddScoped<IDataSeeding, DataSeeding>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IServiceManager, ServiceManager>();
+            services.AddScoped<IRedisBasketRepo, RedisBasketRepo>();
+            services.AddScoped<IBasketService, BasketService>();
+
 
             services.AddAutoMapper(cfg => { }, typeof(Service.AssemblyReference).Assembly);
 
