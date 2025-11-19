@@ -34,6 +34,7 @@ namespace ECommerce.Web.Extensions
             services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IServiceManager, ServiceManager>();
             services.AddScoped<IRedisBasketRepo, RedisBasketRepo>();
+            services.AddScoped<IBasketService, BasketService>();
 
 
             services.AddAutoMapper(cfg => { }, typeof(Service.AssemblyReference).Assembly);
