@@ -1,4 +1,6 @@
 ﻿using DomainLayer.Contracts;
+using DomainLayer.Models.IdentityModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Win32;
 using Persistence;
@@ -29,6 +31,23 @@ namespace ECommerce.Web.Extensions
 
                 return ConnectionMultiplexer.Connect(redisConnection);
             });
+
+            services.AddDbContext<StoreIdentityDbContext>(options =>
+            {
+                options.UseSqlServer(config.GetConnectionString("IdentityDbConnection"));
+            });
+
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireDigit = true;
+                options.Password.RequireLowercase = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequiredLength = 6;
+
+            })
+                .AddEntityFrameworkStores<StoreIdentityDbContext>()
+                .AddDefaultTokenProviders(); 
 
             services.AddScoped<IDataSeeding, DataSeeding>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
