@@ -29,7 +29,7 @@ namespace ECommerce.Web.Extensions
             services.AddSingleton<IConnectionMultiplexer>(sp =>
             {
                 var redisConnection = config.GetConnectionString("Redis")
-                                      ?? "localhost:6379";
+                                      ?? "localhost:6379,abortConnect=false";
 
                 return ConnectionMultiplexer.Connect(redisConnection);
             });
