@@ -1,5 +1,7 @@
 ﻿using DomainLayer.Contracts;
+using DomainLayer.Models.IdentityModels;
 using DomainLayer.Models.ProductModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence.Data;
 using System;
