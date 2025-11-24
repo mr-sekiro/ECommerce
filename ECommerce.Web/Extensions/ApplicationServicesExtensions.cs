@@ -1,5 +1,6 @@
 ﻿using DomainLayer.Contracts;
 using DomainLayer.Models.IdentityModels;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -55,7 +56,7 @@ namespace ECommerce.Web.Extensions
 
             services.AddAuthentication(options =>
             {
-                options.DefaultAuthenticateScheme = "JwtBearer";
+                options.DefaultAuthenticateScheme = "JwtBearer"; //JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = "JwtBearer";
             })
             .AddJwtBearer("JwtBearer", options =>

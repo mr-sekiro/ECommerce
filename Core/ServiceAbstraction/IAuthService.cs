@@ -1,4 +1,5 @@
-﻿using Shared.Dtos.Identity;
+﻿using DomainLayer.Models.IdentityModels;
+using Shared.Dtos.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,5 +12,9 @@ namespace ServiceAbstraction
     {
         Task<AuthResponseDto?> RegisterAsync(AuthRegisterDto dto);
         Task<AuthResponseDto?> LoginAsync(AuthLoginDto dto);
+        Task<bool> CheckEmail(string email);
+        Task<AddressDto?> GetUserAddressAsync(string email);
+        Task<AddressDto?> UpdateUserAddressAsync(string email, AddressDto address);
+        Task<AuthResponseDto> GetCurrentUser(string email);
     }
 }

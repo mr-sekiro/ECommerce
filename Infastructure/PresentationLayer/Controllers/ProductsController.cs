@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ServiceAbstraction;
 using Shared;
 using Shared.Dtos.Product;
@@ -22,6 +23,7 @@ namespace PresentationLayer.Controllers
         }
 
         //GET: api/products
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetProducts([FromQuery] ProductQueryParams Params)
         {

@@ -1,9 +1,11 @@
 ﻿using DomainLayer.Contracts;
-using DomainLayer.Models.IdentityModels;
 using DomainLayer.Exceptions;
+using DomainLayer.Models.IdentityModels;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using ServiceAbstraction;
 using Shared.Dtos.Identity;
 using System;
 using System.Collections.Generic;
@@ -13,7 +15,6 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using JwtClaims = System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames;
-using ServiceAbstraction;
 
 namespace Service
 {
@@ -107,6 +108,62 @@ namespace Service
                 Roles = roles,
                 Token = new JwtSecurityTokenHandler().WriteToken(token)
             };
+        }
+
+        public async Task<AddressDto?> GetUserAddressAsync(string email)
+        {
+            var user = await _userManager.Users
+                .Include(u => u.Address)
+                .FirstOrDefaultAsync(u => u.Email == email);
+
+            if (user == null) throw new UserNotFoundException(email);
+
+            if (user.Address == null) return null;
+
+            return new AddressDto
+            {
+                FirstName = user.Address.FirstName,
+                LastName = user.Address.LastName,
+                Street = user.Address.Street,
+                City = user.Address.City,
+                Country = user.Address.Country
+            };
+        }
+
+        public async Task<AddressDto?> UpdateUserAddressAsync(string email, AddressDto dto)
+        {
+            var user = await _userManager.Users
+                .Include(u => u.Address)
+                .FirstOrDefaultAsync(x => x.Email == email);
+
+            if (user == null) throw new UserNotFoundException(email);
+
+            user.Address = new Address
+            {
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                Street = dto.Street,
+                City = dto.City,
+                Country = dto.Country
+            };
+
+            await _userManager.UpdateAsync(user);
+
+            return dto;
+        }
+
+        public async Task<bool> CheckEmail(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            return user != null;
+        }
+
+        public async Task<AuthResponseDto> GetCurrentUser(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email)
+                       ?? throw new UserNotFoundException(email);
+
+            return await GenerateJwtAsync(user);
         }
     }
 }
